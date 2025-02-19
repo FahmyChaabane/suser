@@ -23,42 +23,42 @@ public class UserService {
 
     // 🔵 Get All Employees
     public List<UserDto> getAllUsers() {
-        return userRepository.findAll()
+        return this.userRepository.findAll()
                 .stream()
-                .map(userMapper::toDTO)
+                .map(this.userMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     // 🟣 Get Employee by ID (Throws Exception if Not Found)
     public UserDto getUserById(final Long id) {
-        final var user = userRepository.findById(id)
+        final var user = this.userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found with ID: " + id));
-        return userMapper.toDTO(user);
+        return this.userMapper.toDTO(user);
     }
 
     // 🟢 Create Employee
     public UserDto createUser(final UserDto userDto) {
-        final var user = userMapper.toEntity(userDto);
-        final var savedUser = userRepository.save(user);
-        return userMapper.toDTO(savedUser);
+        final var user = this.userMapper.toEntity(userDto);
+        final var savedUser = this.userRepository.save(user);
+        return this.userMapper.toDTO(savedUser);
     }
 
     // 🟠 Update Employee
     public UserDto updateUser(final Long id, final UserDto userDto) {
-        final var existingUser = userRepository.findById(id)
+        final var existingUser = this.userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found with ID: " + id));
         existingUser.setName(userDto.getName());
         existingUser.setRole(userDto.getRole());
         existingUser.setSalary(userDto.getSalary());
-        final var savedUpdatedUser = userRepository.save(existingUser);
-        return userMapper.toDTO(savedUpdatedUser);
+        final var savedUpdatedUser = this.userRepository.save(existingUser);
+        return this.userMapper.toDTO(savedUpdatedUser);
     }
 
     // 🔴 Delete Employee
     public void deleteUser(final Long id) {
-        final var user = userRepository.findById(id)
+        final var user = this.userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found with ID: " + id));
-        userRepository.delete(user);
+        this.userRepository.delete(user);
     }
 
     // More complex query: Find employees by role
@@ -67,9 +67,9 @@ public class UserService {
         Sort.Direction direction = "desc".equalsIgnoreCase(order) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort sort = Sort.by(direction, (sortBy != null && !sortBy.isEmpty()) ? sortBy : "id");
 
-        return userRepository.findByRole(role, sort)
+        return this.userRepository.findByRole(role, sort)
                 .stream()
-                .map(userMapper::toDTO)
+                .map(this.userMapper::toDTO)
                 .collect(Collectors.toList());
     }
 }
